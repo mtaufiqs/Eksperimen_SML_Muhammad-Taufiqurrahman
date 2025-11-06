@@ -1,42 +1,35 @@
-name: 🧹 Preprocessing Telco Data
+name: 📊 Preprocessing Pipeline Automation
 
 on:
+  workflow_dispatch:  # Bisa dijalankan manual dari VSCode / GitHub
   push:
-    branches:
-      - main
     paths:
-      - 'preprocessing/**'
-  workflow_dispatch:  # bisa dijalankan manual dari tab "Actions"
+      - "preprocessing/automate_Muhammad-Taufiqurrahman.py"
+      - "preprocessing/Telco-Customer-Churn_raw.csv"
 
 jobs:
-  preprocess:
-    runs-on: ubuntu-latest
+  preprocessing:
+    name: Jalankan Otomasi Preprocessing
+    runs-on: windows-latest  # Bisa diganti 'ubuntu-latest' kalau pakai Linux
 
     steps:
-      # --- 1️⃣ Checkout Repository ---
-      - name: Checkout Repository
+      - name: 📥 Checkout Repository
         uses: actions/checkout@v4
 
-      # --- 2️⃣ Setup Python Environment ---
-      - name: Set up Python
+      - name: 🐍 Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.10"
 
-      # --- 3️⃣ Install Dependencies ---
-      - name: Install Dependencies
+      - name: 📦 Install Dependencies
         run: |
-          python -m pip install --upgrade pip
           pip install pandas numpy scikit-learn
 
-      # --- 4️⃣ Jalankan Script Preprocessing ---
-      - name: Run Preprocessing Script
+      - name: ⚙️ Jalankan Script Preprocessing
         run: |
-          python preprocessing/automate_Muhammad_Taufiqurrahman.py
+          python "./preprocessing/automate_Muhammad-Taufiqurrahman.py"
 
-      # --- 5️⃣ Upload Artifact Hasil Preprocessing ---
-      - name: Upload Preprocessed File
-        uses: actions/upload-artifact@v4
-        with:
-          name: Telco-Customer-Churn_preprocessing
-          path: preprocessing/Telco-Customer-Churn_preprocessing.csv
+      - name: 📂 Verifikasi Hasil Output
+        run: |
+          echo "Berikut file hasil preprocessing yang dihasilkan:"
+          dir "preprocessing/Telco-Customer-Churn_preprocessing"
