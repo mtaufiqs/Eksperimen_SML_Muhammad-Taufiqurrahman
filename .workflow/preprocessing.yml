@@ -1,35 +1,42 @@
-name: Preprocessing Automation
+name: 🧹 Preprocessing Telco Data
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch:   # bisa dijalankan manual dari GitHub
+    paths:
+      - 'preprocessing/**'
+  workflow_dispatch:  # bisa dijalankan manual dari tab "Actions"
 
 jobs:
   preprocess:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🧩 Checkout repository
+      # --- 1️⃣ Checkout Repository ---
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: 🐍 Setup Python
+      # --- 2️⃣ Setup Python Environment ---
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: 📦 Install dependencies
+      # --- 3️⃣ Install Dependencies ---
+      - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pandas numpy scikit-learn seaborn matplotlib jupyter
+          pip install pandas numpy scikit-learn
 
-      - name: ⚙️ Jalankan preprocessing otomatis
+      # --- 4️⃣ Jalankan Script Preprocessing ---
+      - name: Run Preprocessing Script
         run: |
           python preprocessing/automate_Muhammad_Taufiqurrahman.py
 
-      - name: 💾 Upload hasil preprocessing
+      # --- 5️⃣ Upload Artifact Hasil Preprocessing ---
+      - name: Upload Preprocessed File
         uses: actions/upload-artifact@v4
         with:
-          name: dataset-preprocessed
-          path: preprocessing/namadataset_preprocessing/
+          name: Telco-Customer-Churn_preprocessing
+          path: preprocessing/Telco-Customer-Churn_preprocessing.csv
